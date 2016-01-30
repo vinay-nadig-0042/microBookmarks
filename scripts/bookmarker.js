@@ -7,6 +7,14 @@ var get_parser = function (url) {
   return parser
 }
 
+var generate_uuid = function() {
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+    return v.toString(16);
+  });
+  return uuid
+}
+
 isElementInViewport = function (el) {
 
   if (typeof jQuery === "function" && el instanceof jQuery) {
@@ -63,7 +71,8 @@ var handleKeyDown = function (e) {
         }
         anchorElements.push({
           id: elem.id,
-          text: elem.text
+          text: elem.text,
+          uuid: generate_uuid()
         })
       })
 
@@ -72,7 +81,8 @@ var handleKeyDown = function (e) {
         host_url: currURLParser.protocol + '//' + currURLParser.host,
         time: timeNow.toJSON(),
         links: anchorElements,
-        pos: currScrollPos
+        pos: currScrollPos,
+        uuid: generate_uuid()
       })
 
       chrome.storage.sync.set(bmObj)
