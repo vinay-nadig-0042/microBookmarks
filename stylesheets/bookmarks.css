@@ -1,0 +1,16 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #ecf0f1;
+}
+
+#links-list {
+  text-align: left;
+}
+
+#links-list a {
+  text-decoration: none;
+}
+
+#links-list .page-position {
+  text-align: right;
+}

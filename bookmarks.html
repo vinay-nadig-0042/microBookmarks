@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
+  <title>MicroBookmarks</title>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="stylesheets/bookmarks.css">
 </head>
 <body>
+<h3>Bookmarks</h3>
 <table id="links-list">
-  <caption>Latest Pings</caption>
   <thead>
     <tr>
       <th>Domain</th>
       <th>Link</th>
-      <th>Position</th>
       <th>Time</th>
-      <th>Actions</th>
+      <th>Position</th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -21,12 +24,13 @@
 
 <table id='dummy-table' style="display:none">
   <tbody>
-    <tr><td class="domain-name"></td><td class="link-text"></td><td class="page-position"></td><td class="save-time"></td><td class="action-item"></td></tr>
+    <tr><td class="domain-name"></td><td class="link-text"></td><td class="save-time"><td class="page-position"></td></td><td class="delete-link"></td><td class="delete-instance"></tr>
   </tbody>
 </table>
 <script src="scripts/jquery-2.2.0.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="scripts/underscore.string.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="scripts/underscore-min.js" type="text/javascript" charset="utf-8"></script>
+<script src="scripts/moment.js" type="text/javascript" charset="utf-8"></script>
 <script src="scripts/bookmarks.js" type="text/javascript" charset="utf-8"></script>
 </body>
 </html>

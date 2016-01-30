@@ -8,7 +8,7 @@ function create_and_scroll_tab(bookmark_instance) {
   })
 }
 
-var getStorageCallback = function(link_id, saved_instance_id, domain_name, domains) {
+var deleteBookmarkCallback = function(link_id, saved_instance_id, domain_name, domains) {
   saved_instance = _.find(domains[domain_name].saved_instances, function(saved_instance) {
     return saved_instance.uuid == saved_instance_id
   })
@@ -22,7 +22,21 @@ var getStorageCallback = function(link_id, saved_instance_id, domain_name, domai
 }
 
 function delete_bookmark(link_id, saved_instance_id, domain_name) {
-  chrome.storage.sync.get(null, getStorageCallback.bind(null, link_id, saved_instance_id, domain_name))
+  chrome.storage.sync.get(null, deleteBookmarkCallback.bind(null, link_id, saved_instance_id, domain_name))
+}
+
+delteBookmarkCollectionCallback = function(instance_id, domain_name, domains) {
+  saved_instances = _.reject(domains[domain_name].saved_instances, function(saved_instance) {
+    return saved_instance.uuid == instance_id
+  })
+  domains[domain_name].saved_instances = saved_instances;
+  chrome.storage.sync.set(domains, function () {
+    $("tr[data-bookmark-instance-id='" + instance_id + "']").remove()
+  })
+}
+
+function delete_collection(instanceId, domain_name) {
+  chrome.storage.sync.get(null, delteBookmarkCollectionCallback.bind(null, instanceId, domain_name))
 }
 
 chrome.storage.sync.get(null, function (domains) {
@@ -48,7 +62,7 @@ chrome.storage.sync.get(null, function (domains) {
             $('<a></a>')
             .attr('href', bookmark_instance.url + '#' + elem.id)
             .attr('target', '_blank')
-            .text(elem.text || s.humanize(elem.id)))
+            .text(elem.text || s.titleize(s.humanize(elem.id).replace(/[0-9]/g, ''))))
 
         row.find('.page-position')
           .append(
@@ -60,9 +74,9 @@ chrome.storage.sync.get(null, function (domains) {
             }))
 
         row.find('.save-time')
-          .append(bookmark_instance.time)
+          .append(moment(bookmark_instance.time).fromNow());
 
-        row.find('.action-item')
+        row.find('.delete-link')
           .append(
             $('<a></a>')
             .attr('href', '#')
@@ -72,6 +86,18 @@ chrome.storage.sync.get(null, function (domains) {
               instanceId = $(this).closest('tr').data('bookmark-instance-id')
               delete_bookmark(bookmarkId, instanceId, domain_name)
             }))
+
+        if (k == 0) {
+          row.find('.delete-instance')
+            .append(
+              $('<a></a>')
+              .attr('href', '#')
+              .text('Delete Collection')
+              .on('click', function() {
+                var instanceId = $(this).closest('tr').data('bookmark-instance-id')
+                delete_collection(instanceId, domain_name)
+              }))
+        }
 
         $('#links-list tbody')
           .append(row.show())
