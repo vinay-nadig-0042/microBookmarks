@@ -1,4 +1,4 @@
-var saveBookmarks = function() {
+var saveBookmarks = function () {
   parser = get_parser(document.URL)
   host_name = parser.hostname
   chrome.storage.sync.get(host_name, function (bmObjFromStorage) {
@@ -20,9 +20,10 @@ var saveBookmarks = function() {
       .find('*')
       .not('a')
       .each(function () {
+        // Only select elements within viewport, elements with id, skip elements with fixed position(navbars, menus etc)
         if (isElementInViewport($(this)) && $(this).is(':visible') && $(this)[0].id != '' && !($(this).closest('div').css('position') == 'fixed')) {
           conditionalIndex += 1
-          if(conditionalIndex >= 3) {
+          if(conditionalIndex >= 3) { // Only save two bookmarks
             return false
           }
           visibleElements.push($(this)[0])
@@ -30,9 +31,6 @@ var saveBookmarks = function() {
       })
 
     $.each(visibleElements, function (index, elem) {
-      if (elem.href === "") {
-        return true
-      }
       anchorElements.push({
         id: elem.id,
         text: elem.text,
@@ -49,7 +47,9 @@ var saveBookmarks = function() {
       uuid: generate_uuid()
     })
 
-    chrome.storage.sync.set(bmObj)
+    chrome.storage.sync.set(bmObj, function() {
+      display_flash('Bookmark Saved')
+    })
   })
 }
 

@@ -30,3 +30,20 @@ isElementInViewport = function (el) {
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   );
 }
+
+var display_flash = function (text) {
+  $('body').append(
+    $('<span></span>')
+      .css('position', 'fixed')
+      .css('top', 0)
+      .css('left', 0)
+      .css('width', '100%')
+      .css('background', '#ecf0f1')
+      .css('text-align', 'center')
+      .css('height', '30px')
+      .css('line-height', '30px')
+      .text(text)
+      .fadeIn(1000)
+      .fadeOut(1000)
+    );
+}

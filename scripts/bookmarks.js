@@ -1,3 +1,4 @@
+// When scroll position link is clicked on bookmarks page
 function createAndScrollTab(bookmarkInstance) {
   chrome.tabs.create({ url: bookmarkInstance.url, active: true }, function (tab) {
     chrome.tabs.executeScript(tab.id, { file: 'scripts/jquery-2.2.0.min.js' }, function () {
@@ -8,6 +9,7 @@ function createAndScrollTab(bookmarkInstance) {
   })
 }
 
+// Delete a specific bookmark
 var deleteBookmarkCallback = function(linkId, instanceId, domainName, domainsObj) {
   savedInstance = _.find(domainsObj[domainName].saved_instances, function(savedInstance) {
     return savedInstance.uuid == instanceId
@@ -18,6 +20,7 @@ var deleteBookmarkCallback = function(linkId, instanceId, domainName, domainsObj
   savedInstance.links = links
   chrome.storage.sync.set(domainsObj, function () {
     $("tr[data-link-id='" + linkId + "']").remove()
+    display_flash('Bookmark Deleted.')
   })
 }
 
@@ -25,6 +28,7 @@ function deleteBookmark(linkId, instanceId, domainName) {
   chrome.storage.sync.get(null, deleteBookmarkCallback.bind(null, linkId, instanceId, domainName))
 }
 
+// Delete a collection/instance of bookmark
 delteBookmarkCollectionCallback = function(instanceId, domainName, domainsObj) {
   savedInstances = _.reject(domainsObj[domainName].savedInstances, function(savedInstance) {
     return savedInstance.uuid == instanceId
@@ -32,6 +36,7 @@ delteBookmarkCollectionCallback = function(instanceId, domainName, domainsObj) {
   domainsObj[domainName].saved_instances = savedInstances;
   chrome.storage.sync.set(domainsObj, function () {
     $("tr[data-bookmark-instance-id='" + instanceId + "']").remove()
+    display_flash('Bookmark Collection Deleted.')
   })
 }
 
@@ -39,6 +44,7 @@ function deleteCollection(instanceId, domainName) {
   chrome.storage.sync.get(null, delteBookmarkCollectionCallback.bind(null, instanceId, domainName))
 }
 
+// Populate page with data
 chrome.storage.sync.get(null, function (domainsObj) {
   $.each(domainsObj, function (domainName, domain) {
     $.each(domain['saved_instances'], function (j, bookmarkInstance) {
